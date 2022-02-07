@@ -60,6 +60,7 @@ const (
 	TokenTypeDecimalPoint       = "DecimalPoint"
 	TokenTypeDenominator        = "Denominator"
 	TokenTypeDigitalPlaceHolder = "DigitalPlaceHolder"
+	TokenTypeElapsedDateTimes   = "ElapsedDateTimes"
 	TokenTypeExponential        = "Exponential"
 	TokenTypeFraction           = "Fraction"
 	TokenTypeGeneral            = "General"
@@ -69,7 +70,6 @@ const (
 	TokenTypeOperator           = "Operator"
 	TokenTypePercent            = "Percent"
 	TokenTypeRepeatsChar        = "RepeatsChar"
-	TokenTypeScientific         = "Scientific"
 	TokenTypeStop               = "Stop"
 	TokenTypeSwitchArgument     = "SwitchArgument"
 	TokenTypeSymbol             = "Symbol"
@@ -326,7 +326,7 @@ func (ps *Parser) getTokens(numFmt string) Tokens {
 						}
 					}
 					if isDateTime {
-						ps.Token.TType = TokenTypeDateTimes
+						ps.Token.TType = TokenTypeElapsedDateTimes
 					}
 					ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
 					ps.Token = Token{}
@@ -612,7 +612,7 @@ func (ps *Parser) getTokens(numFmt string) Tokens {
 				ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
 				ps.Token = Token{}
 			}
-			ps.Token.TType = TokenTypeScientific
+			ps.Token.TType = TokenTypeExponential
 			ps.Token.TValue += ps.doubleChar()
 			ps.Offset += 2
 			continue
@@ -658,6 +658,10 @@ func (ps *Parser) getTokens(numFmt string) Tokens {
 			if strings.ContainsAny(DatesTimesCodeChars, strings.ToUpper(ps.nextChar())) {
 				ps.Token.TValue += ps.currentChar()
 				ps.Token.TType = TokenTypeLiteral
+				ps.Offset++
+				continue
+			}
+			if ps.currentChar() == QuoteSingle {
 				ps.Offset++
 				continue
 			}
