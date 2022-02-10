@@ -373,16 +373,16 @@ func (ps *Parser) getTokens(numFmt string) Tokens {
 			if ps.currentChar() == Dot {
 				if ps.Token.TType == TokenTypeZeroPlaceHolder || ps.Token.TType == TokenTypeHashPlaceHolder {
 					ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
-					ps.Tokens.add(ps.currentChar(), TokenTypeDecimalPoint, ps.Token.Parts)
 					ps.Token = Token{}
-					ps.Offset++
-					continue
 				}
 				if ps.Token.TType != "" && ps.Token.TType != TokenTypeLiteral {
 					ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
 					ps.Token = Token{}
 				}
 				ps.Token.TType = TokenTypeLiteral
+				if !ps.InString && (ps.nextChar() == Zero) {
+					ps.Token.TType = TokenTypeDecimalPoint
+				}
 				ps.Token.TValue += ps.currentChar()
 				ps.Offset++
 				continue
