@@ -70,9 +70,7 @@ const (
 	TokenTypeOperator           = "Operator"
 	TokenTypePercent            = "Percent"
 	TokenTypeRepeatsChar        = "RepeatsChar"
-	TokenTypeStop               = "Stop"
 	TokenTypeSwitchArgument     = "SwitchArgument"
-	TokenTypeSymbol             = "Symbol"
 	TokenTypeTextPlaceHolder    = "TextPlaceHolder"
 	TokenTypeThousandsSeparator = "ThousandsSeparator"
 	TokenTypeUnknown            = "Unknown"
@@ -148,7 +146,7 @@ var GeneralFormattingSwitchArguments = []string{
 }
 
 // AmPm defined the AM and PM with international considerations.
-var AmPm = []string{"AM/PM", "A/P", "上午/下午", "4E0A5348/4E0B5348"}
+var AmPm = []string{"AM/PM", "A/P", "上午/下午"}
 
 // ConditionOperators defined the condition operators.
 var ConditionOperators = []string{"<", "<=", ">", ">=", "<>", "="}
