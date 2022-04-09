@@ -245,13 +245,13 @@ func NumberFormatParser() Parser {
 	return Parser{}
 }
 
-// EOF provides function to check whether or not end of tokens stack.
+// EOF provides function to check whether end of tokens stack.
 func (ps *Parser) EOF() bool {
 	return ps.Offset >= len([]rune(ps.NumFmt))
 }
 
 // getTokens return a token stream (list).
-func (ps *Parser) getTokens(numFmt string) Tokens {
+func (ps *Parser) getTokens() Tokens {
 	ps.NumFmt = strings.TrimSpace(ps.NumFmt)
 	// state-dependent character evaluation (order is important)
 	for !ps.EOF() {
@@ -700,7 +700,7 @@ func (ps *Parser) getTokens(numFmt string) Tokens {
 // Parse provides function to parse number format as a token stream (list).
 func (ps *Parser) Parse(numFmt string) []Section {
 	ps.NumFmt = numFmt
-	ps.Tokens = ps.getTokens(numFmt)
+	ps.Tokens = ps.getTokens()
 	return ps.Tokens.Sections
 }
 

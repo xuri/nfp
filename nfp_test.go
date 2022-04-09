@@ -517,6 +517,7 @@ func TestNFP(t *testing.T) {
 		{`yyyy\-mm\-dd\ h:mm`, "[{Positive [{yyyy DateTimes []} {- Literal []} {mm DateTimes []} {- Literal []} {dd DateTimes []} {  Literal []} {h DateTimes []} {: Literal []} {mm DateTimes []}]}]"},
 		{`yyyy\-mm\-dd\Thh:mm`, "[{Positive [{yyyy DateTimes []} {- Literal []} {mm DateTimes []} {- Literal []} {dd DateTimes []} {T Literal []} {hh DateTimes []} {: Literal []} {mm DateTimes []}]}]"},
 		{`yyyy\-mm\-dd\Thhmmss.000`, "[{Positive [{yyyy DateTimes []} {- Literal []} {mm DateTimes []} {- Literal []} {dd DateTimes []} {T Literal []} {hh DateTimes []} {mm DateTimes []} {ss DateTimes []} {. DecimalPoint []} {000 ZeroPlaceHolder []}]}]"},
+		{`[DBNum1][$-zh-CN]h"时"mm"分";"====="@@@"--"@"----"`, "[{Positive [{[DBNum1] SwitchArgument []} {[$-zh-CN] CurrencyLanguage [{{zh CurrencyString []} } {{CN LanguageInfo []} }]} {h DateTimes []} {时 Literal []} {mm DateTimes []} {分 Literal []}]} {Text [{===== Literal []} {@ TextPlaceHolder []} {@ TextPlaceHolder []} {@ TextPlaceHolder []} {-- Literal []} {@ TextPlaceHolder []} {---- Literal []}]}]"},
 	} {
 		p := NumberFormatParser()
 		result := fmt.Sprint(p.Parse(item[0]))
