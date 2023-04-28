@@ -179,10 +179,9 @@ type Section struct {
 // Tokens directly maps the ordered list of tokens.
 // Attributes:
 //
-//    Index        - Current position in the number format expression
-//    SectionIndex - Current position in section
-//    Sections     - Ordered section of token sequences
-//
+//	Index        - Current position in the number format expression
+//	SectionIndex - Current position in section
+//	Sections     - Ordered section of token sequences
 type Tokens struct {
 	Index        int
 	SectionIndex int
@@ -349,6 +348,10 @@ func (ps *Parser) getTokens() Tokens {
 				}
 				if ps.Token.TType != "" {
 					ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
+					ps.Token = Token{}
+				}
+				if ps.Token.TValue != "" && !strings.ContainsAny(NumCodeChars, ps.Token.TValue) {
+					ps.Tokens.add(ps.Token.TValue, TokenTypeLiteral, ps.Token.Parts)
 					ps.Token = Token{}
 				}
 				ps.Token.TType = TokenTypeZeroPlaceHolder

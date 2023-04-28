@@ -53,6 +53,7 @@ func TestNFP(t *testing.T) {
 		{"@", "[{Text [{@ TextPlaceHolder []}]}]"},
 		{`**x`, "[{Positive [{* RepeatsChar []} {x Literal []}]}]"},
 		{`[$-]`, "[{Positive [{[$-] CurrencyLanguage [{{ LanguageInfo []} }]}]}]"},
+		{"x0.00", "[{Positive [{x Literal []} {0 ZeroPlaceHolder []} {. DecimalPoint []} {00 ZeroPlaceHolder []}]}]"},
 		{"1.2", "[{Positive [{1 Literal []} {. DecimalPoint []} {2 Literal []}]}]"},
 		{"#.2", "[{Positive [{# HashPlaceHolder []} {. DecimalPoint []} {2 Literal []}]}]"},
 		{"1,2#", "[{Positive [{1 Literal []} {, ThousandsSeparator []} {2 Literal []} {# HashPlaceHolder []}]}]"},
