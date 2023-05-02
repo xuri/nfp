@@ -1,5 +1,6 @@
-// Copyright 2022 The nfp Authors. All rights reserved. Use of this source code
-// is governed by a BSD-style license that can be found in the LICENSE file.
+// Copyright 2022 - 2023 The nfp Authors. All rights reserved. Use of this
+// source code is governed by a BSD-style license that can be found in the
+// LICENSE file.
 //
 // This package NFP (Number Format Parser) produce syntax trees for number
 // format expression. Excel Number format controls options such the number of
@@ -680,6 +681,10 @@ func (ps *Parser) getTokens() Tokens {
 			if ps.currentChar() == QuoteSingle {
 				ps.Offset++
 				continue
+			}
+			if !strings.ContainsAny(NumCodeChars, ps.currentChar()) && ps.Token.TType == TokenTypeZeroPlaceHolder {
+				ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
+				ps.Token = Token{}
 			}
 		}
 		ps.Token.TValue += ps.currentChar()

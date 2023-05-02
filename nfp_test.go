@@ -1,5 +1,6 @@
-// Copyright 2022 The nfp Authors. All rights reserved. Use of this source code
-// is governed by a BSD-style license that can be found in the LICENSE file.
+// Copyright 2022 - 2023 The nfp Authors. All rights reserved. Use of this
+// source code is governed by a BSD-style license that can be found in the
+// LICENSE file.
 //
 // This package NFP (Number Format Parser) produce syntax trees for number
 // format expression. Excel Number format controls options such the number of
@@ -54,6 +55,8 @@ func TestNFP(t *testing.T) {
 		{`**x`, "[{Positive [{* RepeatsChar []} {x Literal []}]}]"},
 		{`[$-]`, "[{Positive [{[$-] CurrencyLanguage [{{ LanguageInfo []} }]}]}]"},
 		{"x0.00", "[{Positive [{x Literal []} {0 ZeroPlaceHolder []} {. DecimalPoint []} {00 ZeroPlaceHolder []}]}]"},
+		{"0.0abc00", "[{Positive [{0 ZeroPlaceHolder []} {. DecimalPoint []} {0 ZeroPlaceHolder []} {abc Literal []} {00 ZeroPlaceHolder []}]}]"},
+		{"x00", "[{Positive [{x Literal []} {00 ZeroPlaceHolder []}]}]"},
 		{"1.2", "[{Positive [{1 Literal []} {. DecimalPoint []} {2 Literal []}]}]"},
 		{"#.2", "[{Positive [{# HashPlaceHolder []} {. DecimalPoint []} {2 Literal []}]}]"},
 		{"1,2#", "[{Positive [{1 Literal []} {, ThousandsSeparator []} {2 Literal []} {# HashPlaceHolder []}]}]"},
