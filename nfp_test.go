@@ -65,6 +65,8 @@ func TestNFP(t *testing.T) {
 		{`;;; "xxx" @ ""`, "[{Positive []} {Negative []} {Zero []} {Text [{  Literal []} {xxx Literal []} {  Literal []} {@ TextPlaceHolder []} {  Literal []}]}]"},
 		{`#''.#`, "[{Positive [{# HashPlaceHolder []} {. DecimalPoint []} {# HashPlaceHolder []}]}]"},
 		{`#"''".#`, "[{Positive [{# HashPlaceHolder []} {'' Literal []} {. DecimalPoint []} {# HashPlaceHolder []}]}]"},
+		{"[h]:m00m:ss", "[{Positive [{h ElapsedDateTimes []} {: Literal []} {m DateTimes []} {00 ZeroPlaceHolder []} {m DateTimes []} {: Literal []} {ss DateTimes []}]}]"},
+		{"abc[h]:mm:ss.0xxxx", "[{Positive [{abc Literal []} {h ElapsedDateTimes []} {: Literal []} {mm DateTimes []} {: Literal []} {ss DateTimes []} {. DecimalPoint []} {0 ZeroPlaceHolder []} {xxxx Literal []}]}]"},
 		{"[s].00.", "[{Positive [{s ElapsedDateTimes []} {. DecimalPoint []} {00 ZeroPlaceHolder []} {. DecimalPoint []}]}]"},
 		{"[s]\".00\"", "[{Positive [{s ElapsedDateTimes []} {. Literal []} {00 Literal []}]}]"},
 		{"[s].##", "[{Positive [{s ElapsedDateTimes []} {. DecimalPoint []} {## HashPlaceHolder []}]}]"},

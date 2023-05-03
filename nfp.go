@@ -572,6 +572,9 @@ func (ps *Parser) getTokens() Tokens {
 		}
 
 		if ps.currentChar() == BracketOpen {
+			if ps.Token.TType == "" && ps.Token.TValue != "" {
+				ps.Token.TType = TokenTypeLiteral
+			}
 			if ps.Token.TType != "" && !ps.InBracket {
 				ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
 				ps.Token = Token{}
@@ -658,6 +661,10 @@ func (ps *Parser) getTokens() Tokens {
 					ps.Token = Token{}
 				}
 				if ps.Token.TType == TokenTypeLiteral || ps.Token.TType == TokenTypeDateTimes && !strings.ContainsAny(ps.Token.TValue, ps.currentChar()) {
+					ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
+					ps.Token = Token{}
+				}
+				if ps.Token.TType != "" && ps.Token.TType != TokenTypeDateTimes {
 					ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
 					ps.Token = Token{}
 				}
