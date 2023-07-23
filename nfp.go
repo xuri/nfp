@@ -234,9 +234,12 @@ type Parser struct {
 	InString      bool
 	InPlaceholder bool
 	NumFmt        string
-	Offset        int
-	Tokens        Tokens
-	Token         Token
+	// Runes is a copy of the number format string as a rune slice. It's stored here to avoid
+	// allocating a new slice every time we need to access it.
+	Runes  []rune
+	Offset int
+	Tokens Tokens
+	Token  Token
 }
 
 // NumberFormatParser provides function to parse an Excel number format into a
@@ -247,12 +250,11 @@ func NumberFormatParser() Parser {
 
 // EOF provides function to check whether end of tokens stack.
 func (ps *Parser) EOF() bool {
-	return ps.Offset >= len([]rune(ps.NumFmt))
+	return ps.Offset >= len(ps.Runes)
 }
 
 // getTokens return a token stream (list).
 func (ps *Parser) getTokens() Tokens {
-	ps.NumFmt = strings.TrimSpace(ps.NumFmt)
 	// state-dependent character evaluation (order is important)
 	for !ps.EOF() {
 		if ps.InBracket {
@@ -714,7 +716,8 @@ func (ps *Parser) getTokens() Tokens {
 
 // Parse provides function to parse number format as a token stream (list).
 func (ps *Parser) Parse(numFmt string) []Section {
-	ps.NumFmt = numFmt
+	ps.NumFmt = strings.TrimSpace(numFmt)
+	ps.Runes = []rune(ps.NumFmt)
 	ps.Tokens = ps.getTokens()
 	return ps.Tokens.Sections
 }
@@ -722,22 +725,22 @@ func (ps *Parser) Parse(numFmt string) []Section {
 // doubleChar provides function to get two characters after the current
 // position.
 func (ps *Parser) doubleChar() string {
-	if len([]rune(ps.NumFmt)) >= ps.Offset+2 {
-		return string([]rune(ps.NumFmt)[ps.Offset : ps.Offset+2])
+	if len(ps.Runes) >= ps.Offset+2 {
+		return string(ps.Runes[ps.Offset : ps.Offset+2])
 	}
 	return ""
 }
 
 // currentChar provides function to get the character of the current position.
 func (ps *Parser) currentChar() string {
-	return string([]rune(ps.NumFmt)[ps.Offset])
+	return string(ps.Runes[ps.Offset])
 }
 
 // nextChar provides function to get the next character of the current
 // position.
 func (ps *Parser) nextChar() string {
-	if len([]rune(ps.NumFmt)) >= ps.Offset+2 {
-		return string([]rune(ps.NumFmt)[ps.Offset+1 : ps.Offset+2])
+	if len(ps.Runes) >= ps.Offset+2 {
+		return string(ps.Runes[ps.Offset+1 : ps.Offset+2])
 	}
 	return ""
 }
@@ -747,8 +750,8 @@ func (ps *Parser) nextChar() string {
 func (ps *Parser) apPattern() (int, string) {
 	for i, pattern := range AmPm {
 		l := len(pattern)
-		if len([]rune(ps.NumFmt)) >= ps.Offset+l {
-			matched := string([]rune(ps.NumFmt)[ps.Offset : ps.Offset+l])
+		if len(ps.Runes) >= ps.Offset+l {
+			matched := string(ps.Runes[ps.Offset : ps.Offset+l])
 			if strings.EqualFold(matched, pattern) {
 				return i, matched
 			}
@@ -761,8 +764,8 @@ func (ps *Parser) apPattern() (int, string) {
 // general pattern, it will be returned matched result and result.
 func (ps *Parser) generalPattern() (int, string) {
 	l := len(TokenTypeGeneral)
-	if len([]rune(ps.NumFmt)) >= ps.Offset+l {
-		matched := string([]rune(ps.NumFmt)[ps.Offset : ps.Offset+l])
+	if len(ps.Runes) >= ps.Offset+l {
+		matched := string(ps.Runes[ps.Offset : ps.Offset+l])
 		if strings.EqualFold(matched, TokenTypeGeneral) {
 			return 0, matched
 		}
