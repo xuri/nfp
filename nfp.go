@@ -260,10 +260,25 @@ func (ps *Parser) getTokens() Tokens {
 		if ps.InBracket {
 			if ps.Token.TType == TokenTypeCurrencyLanguage {
 				if ps.currentChar() != Dash && ps.currentChar() != BracketClose {
-					ps.Token.Parts[1].Token.TValue += ps.currentChar()
+					if len(ps.Token.Parts) == 0 {
+						ps.Token.Parts = append(ps.Token.Parts, Part{Token: Token{TType: TokenSubTypeLanguageInfo}})
+					}
+					ps.Token.Parts[len(ps.Token.Parts)-1].Token.TValue += ps.currentChar()
 				}
 				if ps.currentChar() == Dash {
-					ps.Token.Parts[0].Token.TValue, ps.Token.Parts[1].Token.TValue = ps.Token.Parts[1].Token.TValue, ps.Token.Parts[0].Token.TValue
+					if len(ps.Token.Parts) == 1 {
+						ps.Token.Parts[0].Token.TType = TokenSubTypeCurrencyString
+					}
+					if len(ps.Token.Parts) == 1 {
+						ps.Token.Parts = append(ps.Token.Parts, Part{Token: Token{TType: TokenSubTypeLanguageInfo}})
+					} else if len(ps.Token.Parts) > 1 {
+						ps.Token.Parts[1].Token.TValue += ps.currentChar()
+					}
+				}
+				if ps.currentChar() == Comma {
+					ps.Token.TValue += ps.currentChar()
+					ps.Offset++
+					continue
 				}
 			}
 
@@ -309,10 +324,6 @@ func (ps *Parser) getTokens() Tokens {
 					}
 
 					if ps.Token.TType == TokenTypeCurrencyLanguage {
-						if ps.Token.Parts[0].Token.TValue == "" {
-							ps.Token.Parts = []Part{{Token: Token{TType: ps.Token.Parts[1].Token.TType, TValue: ps.Token.Parts[1].Token.TValue}}}
-						}
-
 						ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
 						ps.Token = Token{}
 						ps.Offset++
@@ -403,12 +414,6 @@ func (ps *Parser) getTokens() Tokens {
 
 		if strings.ContainsAny(Dollar+Dash+Plus+ParenOpen+ParenClose+Colon+Whitespace, ps.currentChar()) {
 			if ps.InBracket {
-				if len(ps.Token.Parts) == 0 {
-					ps.Token.Parts = []Part{
-						{Token: Token{TType: TokenSubTypeCurrencyString}},
-						{Token: Token{TType: TokenSubTypeLanguageInfo}},
-					}
-				}
 				ps.Token.TValue += ps.currentChar()
 				ps.Token.TType = TokenTypeCurrencyLanguage
 				ps.Offset++
