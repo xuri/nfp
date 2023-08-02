@@ -42,7 +42,7 @@ const (
 	Whitespace     = " "
 	Zero           = "0"
 	// DatesTimesCodeChars defined dates and times control codes in upper case
-	DatesTimesCodeChars = "EYMDHSG"
+	DatesTimesCodeChars = "AEYMDHSG"
 	// NumCodeChars defined numeric code character
 	NumCodeChars = "0123456789"
 	// Token section types
