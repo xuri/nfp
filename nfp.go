@@ -261,18 +261,19 @@ func (ps *Parser) getTokens() Tokens {
 			if ps.Token.TType == TokenTypeCurrencyLanguage {
 				if ps.currentChar() != Dash && ps.currentChar() != BracketClose {
 					if len(ps.Token.Parts) == 0 {
-						ps.Token.Parts = append(ps.Token.Parts, Part{Token: Token{TType: TokenSubTypeLanguageInfo}})
+						ps.Token.Parts = append(ps.Token.Parts, Part{Token: Token{TType: TokenSubTypeCurrencyString}})
 					}
 					ps.Token.Parts[len(ps.Token.Parts)-1].Token.TValue += ps.currentChar()
 				}
-				if ps.currentChar() == Dash {
-					if len(ps.Token.Parts) == 1 {
-						ps.Token.Parts[0].Token.TType = TokenSubTypeCurrencyString
-					}
-					if len(ps.Token.Parts) == 1 {
+				if ps.currentChar() == Dash && ps.nextChar() != BracketClose {
+					if l := len(ps.Token.Parts); l == 0 {
 						ps.Token.Parts = append(ps.Token.Parts, Part{Token: Token{TType: TokenSubTypeLanguageInfo}})
-					} else if len(ps.Token.Parts) > 1 {
-						ps.Token.Parts[1].Token.TValue += ps.currentChar()
+					} else {
+						if ps.Token.Parts[0].Token.TType != TokenSubTypeLanguageInfo && ps.Token.Parts[0].Token.TValue != "" {
+							ps.Token.Parts = append(ps.Token.Parts, Part{Token: Token{TType: TokenSubTypeLanguageInfo}})
+						} else {
+							ps.Token.Parts[l-1].Token.TValue += ps.currentChar()
+						}
 					}
 				}
 				if ps.currentChar() == Comma {
