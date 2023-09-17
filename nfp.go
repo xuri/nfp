@@ -400,6 +400,13 @@ func (ps *Parser) getTokens() Tokens {
 					ps.Offset++
 					continue
 				}
+				if ps.Token.TType == TokenTypeDateTimes && !strings.ContainsAny(NumCodeChars, ps.nextChar()) {
+					ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
+					ps.Tokens.add(ps.currentChar(), TokenTypeLiteral, ps.Token.Parts)
+					ps.Token = Token{}
+					ps.Offset++
+					continue
+				}
 				if !ps.InString {
 					if ps.Token.TType != "" && strings.ContainsAny(NumCodeChars, ps.nextChar()) {
 						ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
