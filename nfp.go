@@ -365,10 +365,6 @@ func (ps *Parser) getTokens() Tokens {
 					ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
 					ps.Token = Token{}
 				}
-				if ps.Token.TValue != "" && !strings.ContainsAny(NumCodeChars, ps.Token.TValue) {
-					ps.Tokens.add(ps.Token.TValue, TokenTypeLiteral, ps.Token.Parts)
-					ps.Token = Token{}
-				}
 				ps.Token.TType = TokenTypeZeroPlaceHolder
 				if ps.currentChar() != Zero {
 					ps.Token.TType = TokenTypeLiteral
@@ -516,13 +512,6 @@ func (ps *Parser) getTokens() Tokens {
 		}
 
 		if ps.currentChar() == Whitespace {
-			if inStrSlice(AmPm, ps.Token.TValue, false) != -1 {
-				ps.Token.TType = TokenTypeDateTimes
-				ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
-				ps.Token = Token{}
-				ps.Offset++
-				continue
-			}
 			if ps.Token.TType != "" && ps.Token.TType != TokenTypeLiteral {
 				ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
 			}
@@ -587,9 +576,6 @@ func (ps *Parser) getTokens() Tokens {
 		}
 
 		if ps.currentChar() == BracketOpen {
-			if ps.Token.TType == "" && ps.Token.TValue != "" {
-				ps.Token.TType = TokenTypeLiteral
-			}
 			if ps.Token.TType != "" && !ps.InBracket {
 				ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
 				ps.Token = Token{}
@@ -707,9 +693,18 @@ func (ps *Parser) getTokens() Tokens {
 			if !strings.ContainsAny(NumCodeChars, ps.currentChar()) && ps.Token.TType == TokenTypeZeroPlaceHolder {
 				ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
 				ps.Token = Token{}
+				continue
 			}
+			ps.Token.TType = TokenTypeLiteral
 		}
 		ps.Token.TValue += ps.currentChar()
+		if inStrSlice(AmPm, ps.Token.TValue, false) != -1 {
+			ps.Token.TType = TokenTypeDateTimes
+			ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
+			ps.Token = Token{}
+			ps.Offset++
+			continue
+		}
 		ps.Offset++
 	}
 
