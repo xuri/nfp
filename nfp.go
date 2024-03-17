@@ -444,18 +444,20 @@ func (ps *Parser) getTokens() Tokens {
 		}
 
 		if ps.currentChar() == Underscore {
-			if ps.nextChar() == ParenOpen || ps.nextChar() == ParenClose {
-				if ps.Token.TType != "" {
-					ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
-				}
-				ps.Token.TValue = ps.nextChar()
-				ps.Token.TType = TokenTypeAlignment
+			if ps.Token.TType != "" {
+				ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
 			}
+			ps.Token.TValue = Whitespace
+			ps.Token.TType = TokenTypeAlignment
 			ps.Offset += 2
 			continue
 		}
 
 		if ps.currentChar() == Asterisk {
+			if ps.Token.TValue != "" {
+				ps.Tokens.add(ps.Token.TValue, ps.Token.TType, ps.Token.Parts)
+				ps.Token = Token{}
+			}
 			ps.Tokens.add(ps.nextChar(), TokenTypeRepeatsChar, ps.Token.Parts)
 			ps.Token = Token{}
 			ps.Offset += 2
