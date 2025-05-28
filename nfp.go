@@ -558,7 +558,7 @@ func (ps *Parser) getTokens() Tokens {
 
 		if ps.currentChar() == QuoteDouble {
 			ps.Offset++
-			if ps.InString && len(ps.Token.TValue) > 0 {
+			if ps.InString {
 				ps.Tokens.add(ps.Token.TValue, TokenTypeLiteral, ps.Token.Parts)
 				ps.Token = Token{}
 				ps.InString = false
