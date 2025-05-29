@@ -61,7 +61,7 @@ var testStrings [][]string = [][]string{
 	{"1,2#", "[{Positive [{1 Literal []} {, ThousandsSeparator []} {2 Literal []} {# HashPlaceHolder []}]}]"},
 	{`;;;;`, "[]"},
 	{`;;;;@`, "[]"},
-	{`;;; "xxx" @ ""`, "[{Positive []} {Negative []} {Zero []} {Text [{  Literal []} {xxx Literal []} {  Literal []} {@ TextPlaceHolder []} {  Literal []}]}]"},
+	{`;;; "xxx" @ ""`, "[{Positive []} {Negative []} {Zero []} {Text [{  Literal []} {xxx Literal []} {  Literal []} {@ TextPlaceHolder []} {  Literal []} { Literal []}]}]"},
 	{`#''.#`, "[{Positive [{# HashPlaceHolder []} {. DecimalPoint []} {# HashPlaceHolder []}]}]"},
 	{`#"''".#`, "[{Positive [{# HashPlaceHolder []} {'' Literal []} {. DecimalPoint []} {# HashPlaceHolder []}]}]"},
 	{"[h]:m00m:ss", "[{Positive [{h ElapsedDateTimes []} {: Literal []} {m DateTimes []} {00 ZeroPlaceHolder []} {m DateTimes []} {: Literal []} {ss DateTimes []}]}]"},
